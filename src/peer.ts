@@ -47,6 +47,8 @@ export class WebRTCPeer extends EventEmitter<WebRTCPeerEvents> implements Duplex
   public source: Pushable<Uint8Array>
   public sink: Sink<Uint8Array>
   public closed: boolean
+  public signallingChannel?: RTCDataChannel
+
   protected wrtc: WRTC
   protected peerConnection: RTCPeerConnection
   protected channel?: WebRTCDataChannel
@@ -82,7 +84,7 @@ export class WebRTCPeer extends EventEmitter<WebRTCPeerEvents> implements Duplex
     }
   }
 
-  protected handleDataChannelEvent (event: { channel?: RTCDataChannel}) {
+  protected handleDataChannelEvent (event: { channel?: RTCDataChannel }) {
     const dataChannel = event.channel
 
     if (dataChannel == null) {
@@ -119,6 +121,10 @@ export class WebRTCPeer extends EventEmitter<WebRTCPeerEvents> implements Duplex
     })
   }
 
+  handleSignallingDataChannelEvent (event: { channel?: RTCDataChannel }) {
+    this.signallingChannel = event.channel
+  }
+
   async close (err?: Error) {
     this.closed = true
 
@@ -130,6 +136,7 @@ export class WebRTCPeer extends EventEmitter<WebRTCPeerEvents> implements Duplex
     }
 
     this.channel?.close()
+    this.signallingChannel?.close()
     this.peerConnection.close()
     this.source.end(err)
     this.dispatchEvent(new CustomEvent('close'))

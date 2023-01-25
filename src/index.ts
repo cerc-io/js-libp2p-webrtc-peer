@@ -10,6 +10,7 @@ export interface WebRTCPeerEvents {
   'close': CustomEvent
   'ice-candidate': CustomEvent
   'error': CustomEvent<Error>
+  'signalling-channel': CustomEvent
 }
 
 export { WebRTCReceiver } from './receiver.js'
@@ -30,6 +31,7 @@ export interface WebRTCInitiatorInit extends WebRTCPeerInit {
   dataChannelLabel?: string
   dataChannelInit?: RTCDataChannelInit
   offerOptions?: RTCOfferOptions
+  createSignallingChannel: boolean
 }
 
 export interface OfferSignal {
@@ -60,3 +62,6 @@ export interface GoodbyeSignal {
 }
 
 export type Signal = OfferSignal | AnswerSignal | CandidateSignal | RenegotiateSignal | GoodbyeSignal
+
+export const SIGNAL_LABEL = 'SIGNAL_LABEL'
+export const SIGNAL_PROTOCOL = '/signal/1.0.0'

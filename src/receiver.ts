@@ -3,7 +3,7 @@ import { WebRTCHandshake } from './handshake.js'
 import { CustomEvent } from '@libp2p/interfaces/events'
 import { logger } from '@libp2p/logger'
 import type { WebRTCHandshakeOptions } from './handshake.js'
-import type { WebRTCReceiverInit, OfferSignal, Signal, CandidateSignal } from './index.js'
+import { WebRTCReceiverInit, OfferSignal, Signal, CandidateSignal, SIGNAL_LABEL, SIGNAL_PROTOCOL } from './index.js'
 
 const log = logger('libp2p:webrtc-peer:receiver')
 
@@ -27,7 +27,13 @@ export class WebRTCReceiver extends WebRTCPeer {
       detail: event.detail
     })))
     this.peerConnection.addEventListener('datachannel', (event) => {
-      this.handleDataChannelEvent(event)
+      const newChannel = event.channel
+      if (newChannel.label === SIGNAL_LABEL || newChannel.protocol === SIGNAL_PROTOCOL) {
+        this.handleSignallingDataChannelEvent(event)
+        this.dispatchEvent(new CustomEvent('signalling-channel'))
+      } else {
+        this.handleDataChannelEvent(event)
+      }
     })
   }
 

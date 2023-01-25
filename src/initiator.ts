@@ -7,7 +7,7 @@ import delay from 'delay'
 import { CustomEvent } from '@libp2p/interfaces/events'
 import { logger } from '@libp2p/logger'
 import type { WebRTCHandshakeOptions } from './handshake.js'
-import type { WebRTCInitiatorInit, AnswerSignal, Signal } from './index.js'
+import { WebRTCInitiatorInit, AnswerSignal, Signal, SIGNAL_LABEL, SIGNAL_PROTOCOL } from './index.js'
 
 const log = logger('libp2p:webrtc-peer:initator')
 
@@ -16,7 +16,7 @@ const ICECOMPLETE_TIMEOUT = 1000
 export class WebRTCInitiator extends WebRTCPeer {
   private readonly handshake: WebRTCInitiatorHandshake
 
-  constructor (opts: WebRTCInitiatorInit = {}) {
+  constructor (opts: WebRTCInitiatorInit = { createSignallingChannel: false }) {
     super({
       ...opts,
       logPrefix: 'initiator'
@@ -28,6 +28,16 @@ export class WebRTCInitiator extends WebRTCPeer {
         opts.dataChannelInit
       )
     })
+
+    // Create a signalling channel only if requested
+    if (opts.createSignallingChannel) {
+      this.handleSignallingDataChannelEvent({
+        channel: this.peerConnection.createDataChannel(
+          SIGNAL_LABEL,
+          { protocol: SIGNAL_PROTOCOL }
+        )
+      })
+    }
 
     this.handshake = new WebRTCInitiatorHandshake({
       log: this.log,
