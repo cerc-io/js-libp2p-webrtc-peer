@@ -123,6 +123,10 @@ export class WebRTCPeer extends EventEmitter<WebRTCPeerEvents> implements Duplex
 
   handleSignallingDataChannelEvent (event: { channel?: RTCDataChannel }) {
     this.signallingChannel = event.channel
+
+    this.dispatchEvent(new CustomEvent<RTCDataChannel>('signalling-channel', {
+      detail: this.signallingChannel
+    }));
   }
 
   async close (err?: Error) {

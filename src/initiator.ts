@@ -31,12 +31,7 @@ export class WebRTCInitiator extends WebRTCPeer {
 
     // Create a signalling channel only if requested
     if (opts.createSignallingChannel) {
-      this.handleSignallingDataChannelEvent({
-        channel: this.peerConnection.createDataChannel(
-          SIGNAL_LABEL,
-          { protocol: SIGNAL_PROTOCOL }
-        )
-      })
+      this.createSignallingChannel()
     }
 
     this.handshake = new WebRTCInitiatorHandshake({
@@ -53,6 +48,15 @@ export class WebRTCInitiator extends WebRTCPeer {
   handleSignal (signal: Signal) {
     this.handshake.handleSignal(signal).catch(err => {
       this.log('error handling signal %o %o', signal, err)
+    })
+  }
+
+  createSignallingChannel () {
+    this.handleSignallingDataChannelEvent({
+      channel: this.peerConnection.createDataChannel(
+        SIGNAL_LABEL,
+        { protocol: SIGNAL_PROTOCOL }
+      )
     })
   }
 }
