@@ -16,7 +16,7 @@ const ICECOMPLETE_TIMEOUT = 1000
 export class WebRTCInitiator extends WebRTCPeer {
   private readonly handshake: WebRTCInitiatorHandshake
 
-  constructor (opts: WebRTCInitiatorInit = { createSignallingChannel: false }) {
+  constructor (opts: WebRTCInitiatorInit = {}) {
     super({
       ...opts,
       logPrefix: 'initiator'
@@ -28,11 +28,6 @@ export class WebRTCInitiator extends WebRTCPeer {
         opts.dataChannelInit
       )
     })
-
-    // Create a signalling channel only if requested
-    if (opts.createSignallingChannel) {
-      this.createSignallingChannel()
-    }
 
     this.handshake = new WebRTCInitiatorHandshake({
       log: this.log,

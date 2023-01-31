@@ -31,7 +31,6 @@ export interface WebRTCInitiatorInit extends WebRTCPeerInit {
   dataChannelLabel?: string
   dataChannelInit?: RTCDataChannelInit
   offerOptions?: RTCOfferOptions
-  createSignallingChannel: boolean
 }
 
 export interface OfferSignal {
