@@ -10,7 +10,7 @@ export interface WebRTCPeerEvents {
   'close': CustomEvent
   'ice-candidate': CustomEvent
   'error': CustomEvent<Error>
-  'signalling-channel': CustomEvent
+  'signalling-channel': CustomEvent<RTCDataChannel>
 }
 
 export { WebRTCReceiver } from './receiver.js'

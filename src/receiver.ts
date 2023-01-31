@@ -30,7 +30,9 @@ export class WebRTCReceiver extends WebRTCPeer {
       const newChannel = event.channel
       if (newChannel.label === SIGNAL_LABEL || newChannel.protocol === SIGNAL_PROTOCOL) {
         this.handleSignallingDataChannelEvent(event)
-        this.dispatchEvent(new CustomEvent('signalling-channel'))
+        this.dispatchEvent(new CustomEvent<RTCDataChannel>('signalling-channel', {
+          detail: newChannel
+        }));
       } else {
         this.handleDataChannelEvent(event)
       }
