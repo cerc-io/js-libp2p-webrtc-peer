@@ -1,6 +1,6 @@
 {
-  "name": "@libp2p/webrtc-peer",
-  "version": "2.0.2",
+  "name": "@cerc-io/webrtc-peer",
+  "version": "2.0.2-laconic-0.1.0",
   "description": "Simple one-to-one WebRTC data channels",
   "author": "",
   "license": "Apache-2.0 OR MIT",
@@ -145,7 +145,7 @@
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "^1.0.8",
-    "aegir": "^37.2.0",
+    "aegir": "^38.1.0",
     "it-first": "^2.0.0",
     "it-pipe": "^2.0.3",
     "wherearewe": "^2.0.1",

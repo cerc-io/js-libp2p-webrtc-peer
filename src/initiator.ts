@@ -7,7 +7,7 @@ import delay from 'delay'
 import { CustomEvent } from '@libp2p/interfaces/events'
 import { logger } from '@libp2p/logger'
 import type { WebRTCHandshakeOptions } from './handshake.js'
-import type { WebRTCInitiatorInit, AnswerSignal, Signal } from './index.js'
+import { WebRTCInitiatorInit, AnswerSignal, Signal, SIGNAL_LABEL, SIGNAL_PROTOCOL } from './index.js'
 
 const log = logger('libp2p:webrtc-peer:initator')
 
@@ -22,12 +22,18 @@ export class WebRTCInitiator extends WebRTCPeer {
       logPrefix: 'initiator'
     })
 
-    this.handleDataChannelEvent({
-      channel: this.peerConnection.createDataChannel(
+    try {
+      const channel = this.peerConnection.createDataChannel(
         opts.dataChannelLabel ?? uint8ArrayToString(randombytes(20), 'hex').slice(0, 7),
         opts.dataChannelInit
       )
-    })
+      this.handleDataChannelEvent({ channel })
+    } catch (err) {
+      const errMsg = `error creating a RTCDataChannel ${err}`
+      this.log(errMsg)
+
+      throw new Error(errMsg)
+    }
 
     this.handshake = new WebRTCInitiatorHandshake({
       log: this.log,
@@ -44,6 +50,21 @@ export class WebRTCInitiator extends WebRTCPeer {
     this.handshake.handleSignal(signal).catch(err => {
       this.log('error handling signal %o %o', signal, err)
     })
+  }
+
+  createSignallingChannel () {
+    try {
+      const channel = this.peerConnection.createDataChannel(
+        SIGNAL_LABEL,
+        { protocol: SIGNAL_PROTOCOL }
+      )
+      this.handleSignallingDataChannelEvent({ channel })
+    } catch (err) {
+      const errMsg = `error creating a signalling RTCDataChannel ${err}`
+      this.log(errMsg)
+
+      throw new Error(errMsg)
+    }
   }
 }
 
