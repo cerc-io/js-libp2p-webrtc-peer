@@ -29,7 +29,10 @@ export class WebRTCInitiator extends WebRTCPeer {
       )
       this.handleDataChannelEvent({ channel })
     } catch (err) {
-      this.log('error creating a RTCDataChannel %s', err)
+      const errMsg = `error creating a RTCDataChannel ${err}`
+      this.log(errMsg)
+
+      throw new Error(errMsg)
     }
 
     this.handshake = new WebRTCInitiatorHandshake({
@@ -57,7 +60,10 @@ export class WebRTCInitiator extends WebRTCPeer {
       )
       this.handleSignallingDataChannelEvent({ channel })
     } catch (err) {
-      this.log('error creating a signalling RTCDataChannel %s', err)
+      const errMsg = `error creating a signalling RTCDataChannel ${err}`
+      this.log(errMsg)
+
+      throw new Error(errMsg)
     }
   }
 }
