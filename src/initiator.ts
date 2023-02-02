@@ -22,12 +22,15 @@ export class WebRTCInitiator extends WebRTCPeer {
       logPrefix: 'initiator'
     })
 
-    this.handleDataChannelEvent({
-      channel: this.peerConnection.createDataChannel(
+    try {
+      const channel = this.peerConnection.createDataChannel(
         opts.dataChannelLabel ?? uint8ArrayToString(randombytes(20), 'hex').slice(0, 7),
         opts.dataChannelInit
       )
-    })
+      this.handleDataChannelEvent({ channel })
+    } catch (err) {
+      this.log('error creating a RTCDataChannel %s', err)
+    }
 
     this.handshake = new WebRTCInitiatorHandshake({
       log: this.log,
@@ -47,12 +50,15 @@ export class WebRTCInitiator extends WebRTCPeer {
   }
 
   createSignallingChannel () {
-    this.handleSignallingDataChannelEvent({
-      channel: this.peerConnection.createDataChannel(
+    try {
+      const channel = this.peerConnection.createDataChannel(
         SIGNAL_LABEL,
         { protocol: SIGNAL_PROTOCOL }
       )
-    })
+      this.handleSignallingDataChannelEvent({ channel })
+    } catch (err) {
+      this.log('error creating a signalling RTCDataChannel %s', err)
+    }
   }
 }
 
