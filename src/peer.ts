@@ -5,7 +5,7 @@ import randombytes from 'iso-random-stream/src/random.js'
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string'
 import { Pushable, pushable } from 'it-pushable'
 import defer, { DeferredPromise } from 'p-defer'
-import { WebRTCDataChannel } from './channel.js'
+import { WebRTCDataChannel, CHANNEL_BINARY_TYPE } from './channel.js'
 import delay from 'delay'
 import type { WebRTCPeerInit, WebRTCPeerEvents, WRTC } from './index.js'
 import type { Duplex, Sink } from 'it-stream-types'
@@ -121,8 +121,9 @@ export class WebRTCPeer extends EventEmitter<WebRTCPeerEvents> implements Duplex
     })
   }
 
-  handleSignallingDataChannelEvent (event: { channel?: RTCDataChannel }) {
+  handleSignallingDataChannelEvent (event: { channel: RTCDataChannel }) {
     this.signallingChannel = event.channel
+    this.signallingChannel.binaryType = CHANNEL_BINARY_TYPE
 
     this.dispatchEvent(new CustomEvent<RTCDataChannel>('signalling-channel', {
       detail: this.signallingChannel
