@@ -4,6 +4,7 @@ import type { Logger } from '@libp2p/logger'
 
 const MAX_BUFFERED_AMOUNT = 64 * 1024
 const CHANNEL_CLOSING_TIMEOUT = 5 * 1000
+export const CHANNEL_BINARY_TYPE = 'arraybuffer'
 
 export interface WebRTCDataChannelOptions {
   onMessage: (event: MessageEvent<Uint8Array>) => void
@@ -24,7 +25,7 @@ export class WebRTCDataChannel {
     this.label = channel.label
     this.open = defer()
     this.channel = channel
-    this.channel.binaryType = 'arraybuffer'
+    this.channel.binaryType = CHANNEL_BINARY_TYPE
     this.log = opts.log
 
     if (typeof this.channel.bufferedAmountLowThreshold === 'number') {
