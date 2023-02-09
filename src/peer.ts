@@ -141,7 +141,10 @@ export class WebRTCPeer extends EventEmitter<WebRTCPeerEvents> implements Duplex
     }
 
     this.channel?.close()
-    this.signallingChannel?.close()
+    // For Firefox browser, closing the signalling channel as well as the peer connection at once
+    // sometimes doesn't fire the 'close' event on the signalling channel
+    // Skip closing the signalling channel explicitly as closing peer connection closes it anyway
+    // this.signallingChannel?.close()
     this.peerConnection.close()
     this.source.end(err)
     this.dispatchEvent(new CustomEvent('close'))
