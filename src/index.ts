@@ -21,6 +21,10 @@ export interface WebRTCPeerInit {
   id?: string
   wrtc?: WRTC
   peerConnectionConfig?: RTCConfiguration
+  webRTCPortRange?: {
+    min: number
+    max: number
+  }
 }
 
 export interface WebRTCReceiverInit extends WebRTCPeerInit {

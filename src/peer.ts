@@ -62,7 +62,7 @@ export class WebRTCPeer extends EventEmitter<WebRTCPeerEvents> implements Duplex
     this.log = logger(`libp2p:webrtc-peer:${opts.logPrefix}:${this.id}`)
     this.wrtc = opts.wrtc ?? getBrowserRTC()
     this.peerConnection = new this.wrtc.RTCPeerConnection(
-      Object.assign({}, DEFAULT_PEER_CONNECTION_CONFIG, opts.peerConnectionConfig)
+      Object.assign({ portRange: opts.webRTCPortRange }, DEFAULT_PEER_CONNECTION_CONFIG, opts.peerConnectionConfig)
     )
     this.closed = false
     this.connected = defer()
